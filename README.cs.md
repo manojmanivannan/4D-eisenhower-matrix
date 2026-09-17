@@ -2,7 +2,7 @@
 
 # 4D Eisenhower Matrix — Obsidian plugin
 
-Vizualizace tasků napříč celým vault-em v **5-polové Eisenhower matici** (DO / DECIDE / DELEGATE / DELETE / OPEN) + Kanban view. Čte a zapisuje [Obsidian Tasks](https://publish.obsidian.md/tasks/Introduction) syntaxi — `#tagy`, `📅 due`, `🛫 start`, `✅ done`, priority.
+Vizualizace tasků napříč celým vault-em v **6-polové Eisenhower matici** (DO IMMEDIATELY / DO REDUCED QUALITY / DELEGATE WITH PRIORITY / DELEGATE / SCHEDULE / DEFER / OPEN) + Kanban view. Čte a zapisuje [Obsidian Tasks](https://publish.obsidian.md/tasks/Introduction) syntaxi — `#tagy`, `📅 due`, `🛫 start`, `✅ done`, priority.
 
 > Ranní dashboard pro rozhodnutí *co dělat teď*: ráno otevřu, vidím tasky rozdělené podle priority, odškrtnu hotové, případně přidám nové. Source-of-truth zůstávají MD soubory, plugin je jen vizuální vrstva nad nimi.
 
@@ -20,7 +20,7 @@ Vizualizace tasků napříč celým vault-em v **5-polové Eisenhower matici** (
 
 | Funkce | Co dělá |
 |--------|---------|
-| **5-polová matice** | DO / DECIDE / DELEGATE / DELETE + záchytný **OPEN**. Kvadrant určuje první `#tag` za checkboxem (`#DO`, `#DECIDE`, `#DELEGATE`, `#DELETE`); cokoli jiného spadne do OPEN. |
+| **6-polová matice** | DO IMMEDIATELY / DO REDUCED QUALITY / DELEGATE WITH PRIORITY / DELEGATE / SCHEDULE / DEFER + záchytný **OPEN**. Kvadrant určuje první `#tag` za checkboxem (`#DO_IMMEDIATELY`, `#DO_REDUCED`, `#DELEGATE_PRIORITY`, `#DELEGATE`, `#SCHEDULE`, `#DEFER`); cokoli jiného spadne do OPEN. |
 | **Kanban zobrazení** | Rozbalí libovolný kvadrant na celou šířku se sloupci **To-do · In progress · Scheduled · Done**. Na desktopu drag karet mezi sloupci mění stav, na jiný kvadrant je přesune, nebo task rovnou přidáš do sloupce. Na mobilu/tabletu board scrolluje vodorovně a stav měníš přes menu karty (*Mark as…*). |
 | **Graf závislostí** | Ukazuje cíle nad jejich blokátory v pravoúhlé mřížce a úkoly bez vazeb v odděleném pásmu. Větve lze sbalit, graf zoomovat a na desktopu karty ručně rozmístit; první ruční posun přidá `🆔`, souřadnice zůstávají v `data.json`. Mobil nabízí čtení, navigaci, menu a zakládání bez dragu. |
 | **Cross-vault agregace** | Sbírá tasky ze **všech `.md` souborů** ve vaultu (Dataview-like), ne jen z dnešní daily note — jeden board nad celým druhým mozkem. |
@@ -59,8 +59,9 @@ Pak otevři přes ribbon ikonu (mřížka v levém panelu) nebo command palette 
 Plugin čte/zapisuje běžnou Obsidian Tasks syntaxi:
 
 ```markdown
-- [ ] #DO #Osobní ⏫ 📅 2026-05-20 🛫 2026-05-15 Důležitý call s Alicí
-- [x] #DECIDE Dlouhodobé plánování ✅ 2026-05-10
+- [ ] #DO_IMMEDIATELY #Osobní ⏫ 📅 2026-05-20 🛫 2026-05-15 Důležitý call s Alicí
+- [x] #SCHEDULE Dlouhodobé plánování ✅ 2026-05-10
+- [ ] #DO Legacy tag — pořád se mapuje na DO IMMEDIATELY
 - [ ] task bez quadrant tagu  ← spadne do OPEN kvadrantu
 ```
 
@@ -68,11 +69,15 @@ Kvadrantové tagy (první token po `- [ ]`):
 
 | Tag | Kvadrant | Význam |
 |-----|----------|--------|
-| `#DO` | 🔴 DO | Důležité + Urgentní |
-| `#DECIDE` | 🔵 DECIDE | Důležité + Méně urgentní |
-| `#DELEGATE` | 🟢 DELEGATE | Méně důležité + Urgentní |
-| `#DELETE` | 🟡 DELETE | Méně důležité + Méně urgentní |
-| *(jiný / žádný)* | ⚫ OPEN | Nezařazené |
+| `#DO_IMMEDIATELY` | 🔴 DO IMMEDIATELY | Důležité + Urgentní |
+| `#DO_REDUCED` | 🟠 DO REDUCED QUALITY | Nedůležité + Urgentní |
+| `#DELEGATE_PRIORITY` | 🟣 DELEGATE WITH PRIORITY | Důležité + Urgentní + Nelze udělat |
+| `#DELEGATE` | 🟢 DELEGATE | Nedůležité + Urgentní |
+| `#SCHEDULE` | 🔵 SCHEDULE | Neurgentní + Důležité |
+| `#DEFER` | 🟡 DEFER | Neurgentní + Nedůležité |
+| *(jiný / žádný)* | ⚫ OPEN | Bez quadrant tagu |
+
+Legacy tagy `#DO` → DO IMMEDIATELY, `#DECIDE` → SCHEDULE a `#DELETE` → DEFER jsou kvůli zpětné kompatibilitě stále rozpoznávané.
 
 Priorita ([Obsidian Tasks konvence](https://publish.obsidian.md/tasks/Getting+Started/Priorities)):
 
@@ -151,7 +156,7 @@ Pokud daily note pro daný den neexistuje a přidáš první task, plugin ji **v
 Funguje na Androidu (`isDesktopOnly: false`; iOS nezkoušeno, ale mělo by fungovat).
 
 - **Long-press nebo dvojklep** na kartu → context menu (Edit · Open file · **Move to…**)
-- **Přesun mezi kvadranty** se na mobilu dělá přes menu („Přesunout → DECIDE" atd.). Touch-drag je v Obsidian mobile webview nespolehlivý, proto menu — dva klepy, deterministické.
+- **Přesun mezi kvadranty** se na mobilu dělá přes menu („Přesunout → SCHEDULE" atd.). Touch-drag je v Obsidian mobile webview nespolehlivý, proto menu — dva klepy, deterministické.
 - **Sbalená hlavička** (▲ tlačítko) — uvolní vertikální místo pro matici
 
 ## Roadmap

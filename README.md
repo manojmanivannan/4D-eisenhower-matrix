@@ -2,7 +2,7 @@
 
 # 4D Eisenhower Matrix — Obsidian plugin
 
-Visualize tasks across your entire vault in a **5-quadrant Eisenhower matrix** (DO / DECIDE / DELEGATE / DELETE / OPEN) + Kanban view. Reads and writes [Obsidian Tasks](https://publish.obsidian.md/tasks/Introduction) syntax — `#tags`, `📅 due`, `🛫 start`, `✅ done`, priority.
+Visualize tasks across your entire vault in a **6-quadrant Eisenhower matrix** (DO IMMEDIATELY / DO REDUCED QUALITY / DELEGATE WITH PRIORITY / DELEGATE / SCHEDULE / DEFER / OPEN) + Kanban view. Reads and writes [Obsidian Tasks](https://publish.obsidian.md/tasks/Introduction) syntax — `#tags`, `📅 due`, `🛫 start`, `✅ done`, priority.
 
 > A morning dashboard for deciding *what to do now*: open it, see tasks split by priority, check off the done ones, add new ones. Markdown files stay the source of truth — the plugin is just a visual layer on top.
 
@@ -20,7 +20,7 @@ Visualize tasks across your entire vault in a **5-quadrant Eisenhower matrix** (
 
 | Feature | What it does |
 |---------|--------------|
-| **5-quadrant matrix** | DO / DECIDE / DELEGATE / DELETE plus a catch-all **OPEN**. The quadrant is the first `#tag` after the checkbox (`#DO`, `#DECIDE`, `#DELEGATE`, `#DELETE`); anything else lands in OPEN. |
+| **6-quadrant matrix** | DO IMMEDIATELY / DO REDUCED QUALITY / DELEGATE WITH PRIORITY / DELEGATE / SCHEDULE / DEFER plus a catch-all **OPEN**. The quadrant is the first `#tag` after the checkbox (`#DO_IMMEDIATELY`, `#DO_REDUCED`, `#DELEGATE_PRIORITY`, `#DELEGATE`, `#SCHEDULE`, `#DEFER`); anything else lands in OPEN. |
 | **Kanban view** | Expand any quadrant to full width with **To-do · In progress · Scheduled · Done** status columns. On desktop drag cards between columns to change status, onto another quadrant to move them, or add a task straight into a column. On mobile/tablet the board scrolls horizontally and you change status via the card menu (*Mark as…*). |
 | **Dependency graph** | Shows goals above their blockers on an orthogonal grid, with unlinked tasks in a separate band. Collapse branches, zoom, and place cards manually on desktop; the first manual move adds an `🆔` while grid coordinates stay in `data.json`. Mobile provides reading, navigation, menus, and task creation without drag. |
 | **Cross-vault aggregation** | Collects tasks from **every `.md` file** in the vault (Dataview-like), not just today's daily note — one board for your whole second brain. |
@@ -59,8 +59,9 @@ Then open it via the ribbon icon (grid, in the left sidebar) or the command pale
 The plugin reads/writes standard Obsidian Tasks syntax:
 
 ```markdown
-- [ ] #DO #Personal ⏫ 📅 2026-05-20 🛫 2026-05-15 Important call with Alice
-- [x] #DECIDE Long-term planning ✅ 2026-05-10
+- [ ] #DO_IMMEDIATELY #Personal ⏫ 📅 2026-05-20 🛫 2026-05-15 Important call with Alice
+- [x] #SCHEDULE Long-term planning ✅ 2026-05-10
+- [ ] #DO Legacy tag — still maps to DO IMMEDIATELY
 - [ ] task without a quadrant tag  ← lands in the OPEN quadrant
 ```
 
@@ -68,11 +69,15 @@ Quadrant tags (the first token after `- [ ]`):
 
 | Tag | Quadrant | Meaning |
 |-----|----------|---------|
-| `#DO` | 🔴 DO | Important + Urgent |
-| `#DECIDE` | 🔵 DECIDE | Important + Less Urgent |
-| `#DELEGATE` | 🟢 DELEGATE | Less Important + Urgent |
-| `#DELETE` | 🟡 DELETE | Less Important + Less Urgent |
-| *(other / none)* | ⚫ OPEN | Uncategorized |
+| `#DO_IMMEDIATELY` | 🔴 DO IMMEDIATELY | Important + Urgent |
+| `#DO_REDUCED` | 🟠 DO REDUCED QUALITY | Not Important + Urgent |
+| `#DELEGATE_PRIORITY` | 🟣 DELEGATE WITH PRIORITY | Important + Urgent + Unable to do |
+| `#DELEGATE` | 🟢 DELEGATE | Not Important + Urgent |
+| `#SCHEDULE` | 🔵 SCHEDULE | Not Urgent + Important |
+| `#DEFER` | 🟡 DEFER | Not Urgent + Not Important |
+| *(other / none)* | ⚫ OPEN | No quadrant tag |
+
+Legacy tags `#DO` → DO IMMEDIATELY, `#DECIDE` → SCHEDULE and `#DELETE` → DEFER are still recognized for backward compatibility.
 
 Priority ([Obsidian Tasks convention](https://publish.obsidian.md/tasks/Getting+Started/Priorities)):
 
@@ -151,7 +156,7 @@ If a daily note for the given day doesn't exist and you add the first task, the 
 Works on Android (`isDesktopOnly: false`; iOS untested but should work).
 
 - **Long-press or double-tap** a card → context menu (Edit · Open file · **Move to…**)
-- **Moving between quadrants** on mobile is done via the menu ("Move → DECIDE" etc.). Touch-drag is unreliable inside the Obsidian mobile webview, so the menu is used instead — two taps, deterministic.
+- **Moving between quadrants** on mobile is done via the menu ("Move → SCHEDULE" etc.). Touch-drag is unreliable inside the Obsidian mobile webview, so the menu is used instead — two taps, deterministic.
 - **Collapsed header** (the ▲ button) — frees up vertical space for the matrix.
 
 ## Roadmap
